@@ -1,4 +1,4 @@
--- Combining the order years
+--combing the order years 
 
 ;WITH all_orders AS
 (
@@ -34,34 +34,30 @@
         Quantity,
         Revenue,
         COGS
-    FROM Orders_2025
-)
+    FROM Orders_2025)
 
--- Building the main dataset query
+--buliding the main dataset query 
+    select 
+       a.OrderID,
+        a.CustomerID,
+        c.Region ,
 
-SELECT
-    a.OrderID,
-    a.CustomerID,
-    c.Region,
-    a.ProductID,
-    a.OrderDate,
-    DATEADD(WEEK, DATEDIFF(WEEK, 0, a.OrderDate), 0) AS week_date,
-    c.CustomerJoinDate,
-    a.Quantity,
-    a.Revenue,
-    CASE
-        WHEN a.Revenue IS NULL THEN p.Price * a.Quantity
-        ELSE a.Revenue
-    END AS cleandrevenue,
-    a.Revenue - a.COGS AS profit,
-    a.COGS,
-    p.ProductName,
-    p.ProductCategory,
-    p.Price,
-    p.Base_Cost
-FROM all_orders AS a
-LEFT JOIN customers AS c
-    ON a.CustomerID = c.CustomerID
-LEFT JOIN products AS p
-    ON a.ProductID = p.ProductID
-WHERE a.CustomerID IS NOT NULL; -- Dropping orders with null CustomerID
+        a.ProductID,
+        a.OrderDate ,
+        DATEADD(WEEK,DATEDIFF(WEEK,0,a.OrderDate),0) as week_date,
+        c.CustomerJoinDate ,
+        a.Quantity,
+        a.Revenue,
+        case when a.Revenue is null then p.Price * a.Quantity else a.Revenue end as cleandrevenue ,
+        a.Revenue - a.COGS as profit,
+        a.COGS ,
+        p.ProductName ,
+        p.ProductCategory ,
+        p.Price ,
+        p.Base_Cost 
+        from all_orders as a
+        left join customers c 
+        on a.CustomerID = c.CustomerID
+        left join products as p 
+        on a.ProductID = p.ProductID
+        where a.CustomerID is not null --droping noon customers id 
